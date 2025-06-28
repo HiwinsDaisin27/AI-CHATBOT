@@ -24,7 +24,7 @@ if "chat_session" not in st.session_state:
 st.title("🧠 Generative AI Chatbot")
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4712/4712102.png", width=100)
 st.sidebar.markdown("### 🤖 Your AI Side Chick")
-st.sidebar.markdown("Built with Python, Streamlit, and love 💻🤍
+st.sidebar.markdown(" Built with Python, Streamlit, and love 💻🤍 
 ")
 
 if st.sidebar.button("🔄 Reset Chat"):
