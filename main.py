@@ -14,7 +14,7 @@ st.set_page_config(
 
 GOOGLE_API_KEY=os.getenv("GOOGLE_API_KEY")
 
-gen_ai.configure(api_key=GOOGLE_API_KEY)
+gen_ai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model=gen_ai.GenerativeModel("gemini-2.0-flash")
 def map_role(role):
     return "assistant" if role == "model" else role
