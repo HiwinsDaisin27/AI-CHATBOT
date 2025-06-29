@@ -6,6 +6,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import json
+import uuid
 
 load_dotenv()
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
@@ -19,12 +20,12 @@ st.set_page_config(
 
 model = gen_ai.GenerativeModel("gemini-2.0-flash")
 
-def map_role(role):
-    return "assistant" if role == "model" else role
-
 if "chat_session" not in st.session_state:
     st.session_state.chat_session = model.start_chat(history=[])
     st.session_state.initial_message_shown = False
+
+if "user_id" not in st.session_state:
+    st.session_state.user_id = str(uuid.uuid4())
 
 st.title("🧠 Generative AI Chatbot")
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4712/4712102.png", width=100)
@@ -34,6 +35,7 @@ st.sidebar.markdown("Built  with  Python, Streamlit , and  love 💻❤")
 if st.sidebar.button("🔄 Reset Chat"):
     st.session_state.chat_session = model.start_chat(history=[])
     st.session_state.initial_message_shown = False
+    st.session_state.user_id = str(uuid.uuid4())
     st.rerun()
 
 if not st.session_state.initial_message_shown:
@@ -42,7 +44,7 @@ if not st.session_state.initial_message_shown:
     st.session_state.initial_message_shown = True
 
 for message in st.session_state.chat_session.history:
-    with st.chat_message(map_role(message.role)):
+    with st.chat_message("assistant" if message.role == "model" else message.role):
         st.markdown(message.parts[0].text)
 
 user_input = st.chat_input("Type your message here...")
@@ -60,6 +62,6 @@ if user_input:
         client = gspread.authorize(creds)
         sheet = client.open("CHAT_LOGS").sheet1
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        sheet.append_row([timestamp, user_input, response.text])
+        sheet.append_row([timestamp, user_input, response.text, st.session_state.user_id])
     except Exception as e:
         st.error(f"Error saving to Google Sheets: {e}")
