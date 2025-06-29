@@ -5,6 +5,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import json
 
 load_dotenv()
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
@@ -54,7 +55,8 @@ if user_input:
 
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("gen-ai-464314-be1f9ad9d6be.json", scope)
+        service_account_info = json.loads(st.secrets["GOOGLE_SERVICE_ACCOUNT"])
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
         client = gspread.authorize(creds)
         sheet = client.open("CHAT_LOGS").sheet1
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
