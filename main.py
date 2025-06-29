@@ -2,7 +2,11 @@ import streamlit as st
 from dotenv import load_dotenv
 import google.generativeai as gen_ai
 import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
 
+load_dotenv()
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 gen_ai.configure(api_key=api_key)
 
@@ -24,9 +28,7 @@ if "chat_session" not in st.session_state:
 st.title("🧠 Generative AI Chatbot")
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4712/4712102.png", width=100)
 st.sidebar.markdown("### 🤖 Your  AI  Side  Kick")
-st.sidebar.markdown("Built  with  Python, Streamlit , and  love 💻❤")
-
-
+st.sidebar.markdown("Built  with  Python, Streamlit , and  love 💻❤")
 
 if st.sidebar.button("🔄 Reset Chat"):
     st.session_state.chat_session = model.start_chat(history=[])
@@ -49,3 +51,13 @@ if user_input:
     response = st.session_state.chat_session.send_message(user_input)
     with st.chat_message("assistant"):
         st.markdown(response.text)
+
+    try:
+        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        creds = ServiceAccountCredentials.from_json_keyfile_name("gen-ai-464314-be1f9ad9d6be.json", scope)
+        client = gspread.authorize(creds)
+        sheet = client.open("CHAT_LOGS").sheet1
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sheet.append_row([timestamp, user_input, response.text])
+    except Exception as e:
+        st.error(f"Error saving to Google Sheets: {e}")
