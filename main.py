@@ -1,40 +1,21 @@
-import streamlit as st from dotenv import load_dotenv import google.generativeai as gen_ai import os import gspread from oauth2client.service_account import ServiceAccountCredentials from datetime import datetime import json import uuid
+import streamlit as st
+from dotenv import load_dotenv
+import google.generativeai as gen_ai
+import os
+import gspread
+from oauth2client.service_account
+import ServiceAccountCredentials
+from datetime import datetime
+import json
+import uuid
 
 load_dotenv() api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY") gen_ai.configure(api_key=api_key)
 
-st.set_page_config(page_title="🧠 Generative AI Chatbot", layout="centered")
+st.set_page_config( page_title="Chat with Generative AI", page_icon='🧠', layout="centered", )
 
-custom_css = """
+background_image_url = "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0" background_style = f""" <style> .stApp {{ background-image: url('{background_image_url}'); background-size: cover; background-attachment: fixed; background-repeat: no-repeat; background-position: center; }} .main .block-container {{ background-color: rgba(0, 0, 0, 0.6); padding: 2rem; border-radius: 20px; color: white; }} .stTextInput > div > div > input {{ background-color: #1c1c1c; color: white; border-radius: 10px; }} </style> """
 
-<style>
-    body {
-        background-image: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        color: white;
-    }
-    .block-container {
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 15px;
-        padding: 2rem;
-    }
-    .stChatMessage {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 1rem;
-        border-radius: 15px;
-        margin-bottom: 1rem;
-        color: white;
-    }
-    .stTextInput > div > input {
-        background-color: #1e1e1e;
-        color: white;
-        border-radius: 10px;
-        padding: 10px;
-    }
-</style>"""
-
-st.markdown(custom_css, unsafe_allow_html=True)
+st.markdown(background_style, unsafe_allow_html=True)
 
 model = gen_ai.GenerativeModel("gemini-2.0-flash")
 
@@ -42,9 +23,7 @@ if "chat_session" not in st.session_state: st.session_state.chat_session = model
 
 if "user_id" not in st.session_state: st.session_state.user_id = str(uuid.uuid4())
 
-st.markdown("<h1 style='text-align: center;'>💬 Generative AI Chatbot</h1>", unsafe_allow_html=True)
-
-st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4712/4712102.png", width=100) st.sidebar.markdown("### 🤖 Your AI Side Kick") st.sidebar.markdown("Built with Python, Streamlit, and 💙")
+st.title("🧠 Generative AI Chatbot") st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4712/4712102.png", width=100) st.sidebar.markdown("### 🤖 Your  AI  Side  Kick") st.sidebar.markdown("Built  with  Python, Streamlit , and  love 💻❤")
 
 if st.sidebar.button("🔄 Reset Chat"): st.session_state.chat_session = model.start_chat(history=[]) st.session_state.initial_message_shown = False st.session_state.user_id = str(uuid.uuid4()) st.rerun()
 
