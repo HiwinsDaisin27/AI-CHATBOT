@@ -18,6 +18,31 @@ st.set_page_config(
     layout="centered",
 )
 
+background_image = """
+<style>
+[data-testid="stAppViewContainer"] {
+    background-image: url('https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=1400&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.98;
+}
+
+[data-testid="stSidebar"] {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+[data-testid="stChatMessage"] {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+}
+</style>
+"""
+st.markdown(background_image, unsafe_allow_html=True)
+
 model = gen_ai.GenerativeModel("gemini-2.0-flash")
 
 if "chat_session" not in st.session_state:
