@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 import google.generativeai as gen_ai
 import os
 import gspread
-from oauth2client.service_account
-import ServiceAccountCredentials
+from oauth2client.service_account import
+ServiceAccountCredentials
 from datetime import datetime
 import json
 import uuid
