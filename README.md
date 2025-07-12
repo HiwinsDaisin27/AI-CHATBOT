@@ -33,6 +33,8 @@ This app uses secret keys stored securely in Streamlit Cloud under Settings → 
 
 ## 📊 Data Logging
 
+You can view the live Google Sheet where the chatbot logs all conversations [here](https://docs.google.com/spreadsheets/d/1ctOQEKIv8fCJ9gq1lSVisV-X5dPTg7-qdeAHDDvkvWE/edit?usp=drivesdk).
+
 Every message (user input and AI response) is logged to a connected *Google Sheet* named CHAT_LOGS with the following fields:
 - Timestamp
 - User Input
